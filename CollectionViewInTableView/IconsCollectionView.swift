@@ -5,31 +5,41 @@ class IconsCollectionView: DynamicCollectionView {
     
     var bars:[Bar] = []
     
-    let columnLayout = ColumnFlowLayout(
-        cellsPerRow: 4,
-        minimumInteritemSpacing: 0,
-        minimumLineSpacing: 0,
-        sectionInset: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-    )
+    var columnLayout:ColumnFlowLayout?
     
     override func awakeFromNib() {
-        collectionViewLayout = columnLayout
         dataSource = self
         delegate = self
     }
     
+    func initFlowLayout(superviewWidth:CGFloat) {
+        let layout = ColumnFlowLayout(
+            cellsPerRow: 4,
+            superviewWidth: superviewWidth,
+            minimumInteritemSpacing: 0,
+            minimumLineSpacing: 0,
+            sectionInset: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        )
+        columnLayout = layout
+        collectionViewLayout = layout
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
-        if !__CGSizeEqualToSize(bounds.size, self.intrinsicContentSize) {
-            self.invalidateIntrinsicContentSize()
-        }
+//        if !__CGSizeEqualToSize(bounds.size, self.intrinsicContentSize) {
+//            self.invalidateIntrinsicContentSize()
+//        }
     }
     
     override var intrinsicContentSize: CGSize {
+        guard let columnLayout = columnLayout else { return CGSize(width: 0, height: 0) }
         let itemSize = columnLayout.itemSize
         let rows = ceil(Double(bars.count) / Double(columnLayout.cellsPerRow))
-        let w = itemSize.width * CGFloat(columnLayout.cellsPerRow)
+        let w = columnLayout.superviewWidth
+//        let w = itemSize.width * CGFloat(columnLayout.cellsPerRow)
+//        let w = superview?.bounds.width ?? 0
         let h = itemSize.height * CGFloat(rows)
+        
         
         print("itemSize: \(itemSize.width), \(itemSize.height), intrinsicContentSize: \(w), \(h); rows = \(rows)")
         

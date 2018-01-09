@@ -32,7 +32,9 @@ extension ViewController : UITableViewDataSource {
         cell.titleLabel.text = foo.title
         cell.descriptionLabel.text = foo.description
         cell.iconsCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        cell.iconsCollectionView.initFlowLayout(superviewWidth: tableView.frame.width)        
         cell.iconsCollectionView.loadIconsSync()
+        cell.iconsCollectionView.setNeedsLayout()
         
         return cell
     }

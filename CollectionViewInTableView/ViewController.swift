@@ -32,7 +32,7 @@ extension ViewController : UITableViewDataSource {
         cell.titleLabel.text = foo.title
         cell.descriptionLabel.text = foo.description
         cell.iconsCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        cell.iconsCollectionView.loadIcons()
+        cell.iconsCollectionView.loadIconsSync()
         
         return cell
     }
@@ -48,5 +48,9 @@ extension ViewController : UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
+    
+//    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return UITableViewAutomaticDimension
+//    }
     
 }

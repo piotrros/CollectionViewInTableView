@@ -18,7 +18,25 @@ class IconsCollectionView: DynamicCollectionView {
         delegate = self
     }
     
-    func loadIcons() {
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if !__CGSizeEqualToSize(bounds.size, self.intrinsicContentSize) {
+            self.invalidateIntrinsicContentSize()
+        }
+    }
+    
+    override var intrinsicContentSize: CGSize {
+        let itemSize = columnLayout.itemSize
+        let rows = ceil(Double(bars.count) / Double(columnLayout.cellsPerRow))
+        let w = itemSize.width * CGFloat(columnLayout.cellsPerRow)
+        let h = itemSize.height * CGFloat(rows)
+        
+        print("itemSize: \(itemSize.width), \(itemSize.height), intrinsicContentSize: \(w), \(h); rows = \(rows)")
+        
+        return CGSize(width: w, height: h)
+    }
+    
+    func loadIconsAsync() {
         //simulate sending a query to the server by waiting a bit
         bars.removeAll()
         reloadData()
@@ -29,6 +47,15 @@ class IconsCollectionView: DynamicCollectionView {
             }
             self.reloadData()
         }
+    }
+    
+    func loadIconsSync() {
+        bars.removeAll()
+        let iconsCount = Utils.rnd(3, 8)
+        for _ in stride(from: 1, to: iconsCount, by: 1) {
+            bars.append(self.getRandomItem())
+        }
+        reloadData()
     }
     
     func getRandomItem() -> Bar {

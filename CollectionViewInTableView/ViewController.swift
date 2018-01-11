@@ -12,6 +12,7 @@ class ViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.estimatedRowHeight = 188
+        tableView.rowHeight = UITableViewAutomaticDimension
         
         for i in stride(from: 1, to: 10, by: 1) {
             let foo = Foo()
@@ -31,10 +32,8 @@ extension ViewController : UITableViewDataSource {
         
         cell.titleLabel.text = foo.title
         cell.descriptionLabel.text = foo.description
-        cell.iconsCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        cell.iconsCollectionView.initFlowLayout(superviewWidth: tableView.frame.width)        
-        cell.iconsCollectionView.loadIconsSync()
-        cell.iconsCollectionView.setNeedsLayout()
+        
+        self.view.layoutIfNeeded()
         
         return cell
     }
@@ -47,10 +46,10 @@ extension ViewController : UITableViewDataSource {
 
 extension ViewController : UITableViewDelegate {
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
-    }
-    
+//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return UITableViewAutomaticDimension
+//    }
+//
 //    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
 //        return UITableViewAutomaticDimension
 //    }

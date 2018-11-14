@@ -12,10 +12,10 @@ class IconsCollectionView: DynamicCollectionView {
         delegate = self
     }
     
-    func initFlowLayout(superviewWidth:CGFloat) {
+    func initFlowLayout(selfWidth:CGFloat) {
         let layout = ColumnFlowLayout(
             cellsPerRow: 4,
-            superviewWidth: superviewWidth,
+            selfWidth: selfWidth,
             minimumInteritemSpacing: 0,
             minimumLineSpacing: 0,
             sectionInset: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
@@ -34,8 +34,11 @@ class IconsCollectionView: DynamicCollectionView {
     override var intrinsicContentSize: CGSize {
         guard let columnLayout = columnLayout else { return CGSize(width: 0, height: 0) }
         let itemSize = columnLayout.itemSize
-        let rows = ceil(Double(bars.count) / Double(columnLayout.cellsPerRow))
-        let w = columnLayout.superviewWidth
+        // Tthis is the critical part - you are using bars.count to calculate the size, but
+        // in fact you are using bars.count + 1 in numberOfItemsInSection
+        // This can result in situation were the + icon will need another row
+        let rows = ceil(Double(bars.count + 1) / Double(columnLayout.cellsPerRow))
+        let w = columnLayout.selfWidth
 //        let w = itemSize.width * CGFloat(columnLayout.cellsPerRow)
 //        let w = superview?.bounds.width ?? 0
         let h = itemSize.height * CGFloat(rows)
@@ -55,6 +58,8 @@ class IconsCollectionView: DynamicCollectionView {
             for _ in stride(from: 1, to: iconsCount, by: 1) {
                 self.bars.append(self.getRandomItem())
             }
+            // Just a note here - you will have to tell the tableview here that
+            // it should update its view, see my answer here: https://stackoverflow.com/a/47963680/2912282
             self.reloadData()
         }
     }
